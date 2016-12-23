@@ -27,12 +27,12 @@ function test() {
     // buffer to internal extended UTF-8 format.  As a result one cannot
     // create for example "internal keys".
 
-    b = new ArrayBuffer(4);
-    b[0] = 0xff;
-    b[1] = 0x61;
-    b[2] = 0x62;
-    b[3] = 0x63;
-    s = String.fromCharCode.apply(null, b);
+    var u8 = new Uint8Array(4);
+    u8[0] = 0xff;
+    u8[1] = 0x61;
+    u8[2] = 0x62;
+    u8[3] = 0x63;
+    s = String.fromCharCode.apply(null, u8);
     print(s.length, Duktape.enc('jx', s));
     print(Duktape.enc('jx', stringToBuffer(s)));
 

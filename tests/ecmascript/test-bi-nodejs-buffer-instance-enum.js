@@ -40,9 +40,6 @@ string 7
 string 8
 string 9
 string length
-string byteLength
-string byteOffset
-string BYTES_PER_ELEMENT
 string buffer
 ===*/
 

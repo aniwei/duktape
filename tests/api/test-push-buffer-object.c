@@ -46,10 +46,10 @@ static void register_dump_buffer_info(duk_context *ctx) {
 object [object Uint8Array] 32 128 32 1 object
 true false false false true false false false false false false false -> Buffer,Uint8Array
 true false false false false false false false false false false false -> Buffer.prototype
-object [object ArrayBuffer] 32 128 32 1 undefined
+object [object ArrayBuffer] undefined undefined 32 undefined undefined
 false true false false false false false false false false false false -> ArrayBuffer
 false true false false false false false false false false false false -> ArrayBuffer.prototype
-object [object DataView] 32 128 32 1 object
+object [object DataView] undefined 128 32 undefined object
 false false true false false false false false false false false false -> DataView
 false false true false false false false false false false false false -> DataView.prototype
 object [object Int8Array] 32 128 32 1 object
@@ -146,13 +146,13 @@ false false false false true false false false false false false false -> Uint8A
 [object ArrayBuffer]
 [object ArrayBuffer] false false false
 [object ArrayBuffer]
-object [object ArrayBuffer] 22 16 22 1 undefined
+object [object ArrayBuffer] undefined undefined 22 undefined undefined
 false true false false false false false false false false false false -> ArrayBuffer
 false true false false false false false false false false false false -> ArrayBuffer.prototype
+undefined
+undefined
 22
-16
-22
-1
+undefined
 undefined
 123 123
 extbuf[16 + 3] = 123

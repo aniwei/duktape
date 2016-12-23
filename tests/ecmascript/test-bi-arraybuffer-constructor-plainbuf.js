@@ -36,7 +36,7 @@ function arrayBufferPlainBufTest() {
     // same underlying storage.  In Duktape 2.x the argument is ToNumber()
     // coerced which comes out as zero, creating a zero-length ArrayBuffer.
     var buf = new ArrayBuffer(plain);
-    print(typeof buf, buf.length);
+    print(typeof buf, buf.byteLength);
 }
 
 try {

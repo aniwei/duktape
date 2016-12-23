@@ -189,7 +189,7 @@ argument coercion and validation
 6 [object String] TypeError
 7 [object Number] TypeError
 8 [object Function] TypeError
-9 [object ArrayBuffer] 7 102 "foo\ucafebar"
+9 [object Uint8Array] 7 102 "foo\ucafebar"
 10 [object ArrayBuffer] 2 51966 "\ucafe\ufffd"
 11 [object Uint16Array] 4 66 "BADC"
 12 [object Float64Array] 8 111 "o/ Hello"
@@ -204,7 +204,7 @@ argument coercion and validation
 5 [object String] TypeError
 6 [object String] 0 NaN
 7 [object Number] 1 65533
-8 [object ArrayBuffer] 1 65533
+8 [object Uint8Array] 1 65533
 9 [object Function] 1 65533
 10 [object ArrayBuffer] 1 65533
 11 [object Float32Array] 1 65533
@@ -229,7 +229,8 @@ function argumentTest() {
 
     var pb = createPlainBuffer('foo\ucafebar');
     var ab = new ArrayBuffer(4);
-    ab[0] = 0xec; ab[1] = 0xab; ab[2] = 0xbe; ab[3] = 0xff;
+    var u8 = new Uint8Array(ab);
+    u8[0] = 0xec; u8[1] = 0xab; u8[2] = 0xbe; u8[3] = 0xff;
     [
         undefined,
         null,

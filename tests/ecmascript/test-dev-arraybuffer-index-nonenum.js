@@ -6,10 +6,10 @@
 
 /*===
 -1 undefined
-0 {value:0,writable:true,enumerable:false,configurable:false}
-1 {value:0,writable:true,enumerable:false,configurable:false}
-2 {value:0,writable:true,enumerable:false,configurable:false}
-3 {value:0,writable:true,enumerable:false,configurable:false}
+0 undefined
+1 undefined
+2 undefined
+3 undefined
 4 undefined
 0
 1

@@ -7,7 +7,7 @@
 /*===
 string [object String]
 object [object String]
-object [object ArrayBuffer]
+object [object Uint8Array]
 object [object ArrayBuffer]
 pointer [object Pointer]
 object [object Pointer]

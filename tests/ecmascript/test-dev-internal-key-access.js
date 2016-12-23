@@ -23,18 +23,20 @@ using Duktape.dec, date \xFFValue: 123456
 function test() {
     var dt = new Date(123456);  // has internal property \xFFValue
     var buf;
+    var u8;
     var key;
 
     print('date:', dt.toISOString());
 
     // Using ArrayBuffer()
     buf = new ArrayBuffer(6);
-    buf[0] = 0xff;
-    buf[1] = 'V'.charCodeAt(0);
-    buf[2] = 'a'.charCodeAt(0);
-    buf[3] = 'l'.charCodeAt(0);
-    buf[4] = 'u'.charCodeAt(0);
-    buf[5] = 'e'.charCodeAt(0);
+    u8 = new Uint8Array(buf);
+    u8[0] = 0xff;
+    u8[1] = 'V'.charCodeAt(0);
+    u8[2] = 'a'.charCodeAt(0);
+    u8[3] = 'l'.charCodeAt(0);
+    u8[4] = 'u'.charCodeAt(0);
+    u8[5] = 'e'.charCodeAt(0);
     key = bufferToStringRaw(buf);
     print('using ArrayBuffer, date \\xFFValue:', dt[key]);
 

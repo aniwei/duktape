@@ -20,6 +20,9 @@ true
 true false false false
 true
 [object DataView]
+TypeError
+TypeError
+TypeError
 DataView normal call test
 TypeError
 ===*/
@@ -52,6 +55,17 @@ function dataViewConstructorCallTest(constructorCall) {
     // .toString() is inherited from Object.prototype
     print(v.toString === Object.prototype.toString);
     print(v.toString());
+
+    // Reject non-ArrayBuffer arguments, including typed arrays etc.
+    [ new Uint8Array(10), new Float64Array(10),
+      new DataView(new ArrayBuffer(10)) ].forEach(function (v) {
+        try {
+            var res = new DataView(v);
+            print('never here', res);
+        } catch (e) {
+            print(e.name);
+        }
+    });
 }
 
 try {
