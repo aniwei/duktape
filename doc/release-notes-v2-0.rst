@@ -221,23 +221,24 @@ Buffer behavior changes
 There are a lot of buffer behavior changes in the 2.x release; see detailed
 changes below.  Here's a summary of changes:
 
-* Plain buffers now behave like ArrayBuffer instances (to the extent possible)
-  for Ecmascript code, and ``Duktape.Buffer`` has been removed, with
-  ``ArrayBuffer`` taking its place.  There are numerous small changes to how
-  plain buffers are treated by standard built-ins as a result.
+* ``Duktape.Buffer`` has been removed.  Plain buffers now behave like
+  ``Uint8Array`` instances to the extent possible, they don't have a property
+  table however.  There are many small changes to how plain buffers are treated
+  by standard built-ins as a result.  For example, string coercion
+  (``String(plainBuffer)``) now mimics Uint8Array and usually results in the
+  string ``[object Uint8Array]``.
 
-* Plain buffer and ArrayBuffer have numeric indices (e.g. ``arrayBuf[6]``) as
-  before, but the properties are not enumerable so that they won't be e.g.
-  JSON serialized.
+* Non-standard virtual index, ``.length``, and ``.byteOffset`` properties of
+  ``ArrayBuffer`` have been removed.
 
-* Plain buffer string coercion (``String(plainBuffer)``) now mimics ArrayBuffer
-  and usually results in the string ``[object ArrayBuffer]``.
-
-* Default built-in bindings no longer provide the ability to do a 1:1
+* Default Ecmascript built-ins no longer provide the ability to do a 1:1
   buffer-to-string coercion where the buffer bytes are used directly as the
-  internal string bytes (see https://github.com/svaarala/duktape/issues/1005).
-  C code can still do so using ``duk_buffer_to_string()`` (or by direct buffer
-  and string operations) and can expose such a binding to Ecmascript code.
+  internal string bytes.  Instead, an encoding (usually UTF-8) is always
+  involved, and U+FFFD replacement characters are used when invalid inputs
+  are encountered.  See https://github.com/svaarala/duktape/issues/1005.
+  C code can still do 1:1 conversions using ``duk_buffer_to_string()`` or
+  by direct buffer and string operations, and can expose such a binding to
+  Ecmascript code.
 
 * Node.js Buffer binding has been aligned more with Node.js v6.9.1 (from
   Node.js v0.12.1) and some (but not all) behavior differences to actual
@@ -246,11 +247,11 @@ changes below.  Here's a summary of changes:
 * Disabling ``DUK_USE_BUFFEROBJECT_SUPPORT`` allows use of plain buffers in
   the C API, and allows manipulation of plain buffers in Ecmascript code via
   their virtual properties (index properties, ``.length``, etc).  Plain buffers
-  will still inherit from ``ArrayBuffer.prototype``, but all ArrayBuffer, typed
-  array, and Node.js Buffer methods will be non-functional.  Plain buffers
-  won't object coerce.  Duktape custom built-ins operating on plain buffers
-  (like Duktape.dec() with hex or base-64 encoding) continue to work.  (This
-  behavior is not guaranteed and may change even in minor versions.)
+  will still inherit from ``Uint8Array.prototype``, but all ArrayBuffer, typed
+  array, and Node.js Buffer methods will be missing.  Plain buffers won't object
+  coerce.  Duktape custom built-ins operating on plain buffers (like
+  Duktape.dec() with hex or base-64 encoding) continue to work.  (This behavior
+  is not guaranteed and may change even in minor versions.)
 
 To upgrade:
 
@@ -258,24 +259,14 @@ To upgrade:
   which has been updated for Duktape 2.0.
 
 * If you're using standard ArrayBuffers and typed arrays, no changes should
-  normally be necessary, however:
-
-  - Typed array ``.subarray()`` handling of arguments inheriting from a typed
-    array (rather than being a direct instance) has been fixed so that the result
-    has the default prototype for the result type (e.g. ``Uint8Array.prototype``)
-    rather than being copied from the argument.
+  normally be necessary, however see technical changes below.
 
 * If you're using the Node.js Buffer binding, review the following:
-
-  - Node.js Buffer ``.slice()`` handling of arguments inheriting from a Buffer
-    (rather than being a direct instance) has been fixed so that the result has
-    the default prototype (``Buffer.prototype``) rather than being copied from
-    the argument.
 
   - Node.js Buffer ``.concat()`` always returns a buffer copy, even for a
     one-element input array which had special handling in Node.js v0.12.1.
 
-  - Node.hs Buffer.prototype ``.toString()`` now decodes the input buffer
+  - Node.js Buffer.prototype ``.toString()`` now decodes the input buffer
     using UTF-8, emitting replacement characters for invalid UTF-8 sequences.
 
   - Review Buffer code for Node.js Buffer changes between Node.js versions
@@ -284,24 +275,28 @@ To upgrade:
 * If you're using plain buffers, review their usage especially in Ecmascript
   code.
 
+* Regardless of buffer type(s) in use:
+
   - One important change is that ``String(plainBuffer)`` and ``duk_to_string()``
     for a buffer does not work as before, use new ``duk_buffer_to_string()``
     C API call instead.  There's no equivalent function for the default
     Ecmascript built-ins.
 
-  - Another important change is that plain buffers, like ArrayBuffer objects,
+  - Another important change is that plain buffers, like Uint8Array objects,
     boolean coerce to ``true`` regardless of buffer size (zero or larger) and
     contents.
 
 * If you're using ``Duktape.Buffer``, the following new built-ins replace its
   functionality (and more):
 
+  - FIXME
+
   - ``ArrayBuffer.allocPlain()``: to allocate a new (fixed) plain buffer
 
   - ``ArrayBuffer.plainOf()``: to get the underlying plain buffer of any
     buffer object (without making a copy)
 
-Some detailed changes (see ``tests/ecmascript/test-dev-plain-buffer.js)`` for
+Some detailed changes (see ``tests/ecmascript/test-bi-plain-buffer-*.js``) for
 even more detail):
 
 * ``typeof plainBuffer`` is now ``object`` instead of ``buffer``.
